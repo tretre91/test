@@ -13,14 +13,6 @@ jobs:
     continue-on-error: true
     strategy:
       matrix:
-        arch: ['x64']
-        distro: ['fedora:latest', 'ubuntu:latest']
-        cxx: ['g++', 'clang++']
-        cxx_extra_flags: ['']
-        cmake_build_type: ['Release', 'Debug']
-        backend: ['OPENMP']
-        cmake_extra_opts: ['-DCMAKE_CXX_CLANG_TIDY="clang-tidy;-warnings-as-errors=*"']
-        stdcxx: [17]
         include:
           - arch: 'x64'
             distro: 'fedora:latest'
