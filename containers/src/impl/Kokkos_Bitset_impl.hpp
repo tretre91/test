@@ -18,7 +18,7 @@
 #define KOKKOS_BITSET_IMPL_HPP
 
 #include <Kokkos_Macros.hpp>
-#include <impl/Kokkos_BitOps.hpp>
+#include <Kokkos_BitManipulation.hpp>
 #include <cstdint>
 
 #include <cstdio>
@@ -27,12 +27,6 @@
 
 namespace Kokkos {
 namespace Impl {
-
-KOKKOS_FORCEINLINE_FUNCTION
-unsigned rotate_right(unsigned i, int r) {
-  constexpr int size = static_cast<int>(sizeof(unsigned) * CHAR_BIT);
-  return r ? ((i >> r) | (i << (size - r))) : i;
-}
 
 template <typename Bitset>
 struct BitsetCount {
