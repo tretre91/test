@@ -92,6 +92,7 @@ jobs:
         run: ./Kokkos_SimdHostPerformanceTest
       - name: valgrind
         working-directory: builddir/simd/performance_tests
+        if: ${{ failure() }}
         run: valgrind ./Kokkos_SimdHostPerformanceTest --benchmark_filter="scalar i32 reduce_min"
       - name: Setup ssh
         if: ${{ failure() }}
