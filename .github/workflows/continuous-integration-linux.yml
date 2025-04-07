@@ -9,7 +9,7 @@ concurrency:
 permissions: read-all
 
 jobs:
-  CI:
+  - CI:
     continue-on-error: true
     strategy:
       matrix:
@@ -108,7 +108,7 @@ jobs:
           cmake -B builddir -DCMAKE_CXX_COMPILER=${{ matrix.cxx }}
           cmake --build builddir
           cmake --build builddir --target test
-  small_test:
+  - small_test:
     continue-on-error: true
     strategy:
       matrix:
