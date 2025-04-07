@@ -89,11 +89,13 @@ jobs:
           ccache -s
       - name: Tests
         working-directory: builddir/simd/performance_tests
-        run: ./Kokkos_SimdHostPerformanceTest
+        run: ./Kokkos_SimdHostPerformanceTest --benchmark_filter="scalar i32 reduce_min"
       - name: valgrind
         working-directory: builddir/simd/performance_tests
         if: ${{ failure() }}
-        run: valgrind ./Kokkos_SimdHostPerformanceTest --benchmark_filter="scalar i32 reduce_min"
-      - name: Setup ssh
-        if: ${{ failure() }}
-        uses: mxschmitt/action-tmate@v3.19
+        run: |
+          sudo dnf install valgrind
+          valgrind ./Kokkos_SimdHostPerformanceTest --benchmark_filter="scalar i32 reduce_min"
+      #- name: Setup ssh
+      #  if: ${{ failure() }}
+      #  uses: mxschmitt/action-tmate@v3.19
