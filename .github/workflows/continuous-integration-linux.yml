@@ -90,12 +90,6 @@ jobs:
       - name: Tests
         working-directory: builddir/simd/performance_tests
         run: ./Kokkos_SimdHostPerformanceTest --benchmark_filter="scalar i32 reduce_min"
-      - name: valgrind
-        working-directory: builddir/simd/performance_tests
+      - name: Setup ssh
         if: ${{ failure() }}
-        run: |
-          sudo dnf -y install valgrind
-          valgrind ./Kokkos_SimdHostPerformanceTest --benchmark_filter="scalar i32 reduce_min"
-      #- name: Setup ssh
-      #  if: ${{ failure() }}
-      #  uses: mxschmitt/action-tmate@v3.19
+        uses: mxschmitt/action-tmate@v3.19
