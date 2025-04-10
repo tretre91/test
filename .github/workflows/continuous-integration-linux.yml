@@ -61,6 +61,30 @@ jobs:
       - name: maybe_set_hpx_vars
         if: ${{ matrix.backend == 'HPX' }}
         run: echo "HPX_HANDLE_FAILED_NEW=0" >> $GITHUB_ENV
+      - name: Configure Regular Kokkos
+        run: |
+          cmake -B build \
+            -DCMAKE_INSTALL_PREFIX=install \
+            -Ddesul_ROOT=/usr/desul-install/ \
+            -DKokkos_ENABLE_DESUL_ATOMICS_EXTERNAL=ON \
+            -DKokkos_ENABLE_HWLOC=ON \
+            -DKokkos_ENABLE_${{ matrix.backend }}=ON \
+            -DKokkos_ENABLE_DEPRECATED_CODE_4=ON \
+            -DKokkos_ENABLE_COMPILER_WARNINGS=ON \
+            -DCMAKE_CXX_FLAGS="-Werror ${{ matrix.cxx_extra_flags }}" \
+            -DCMAKE_CXX_STANDARD="${{ matrix.stdcxx }}" \
+            -DCMAKE_EXE_LINKER_FLAGS="${{ matrix.extra_linker_flags }}" \
+            -DCMAKE_CXX_COMPILER=${{ matrix.cxx }} \
+            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+            ${{ matrix.cmake_extra_opts }} \
+            -DCMAKE_BUILD_TYPE=${{ matrix.cmake_build_type }}
+      - name: Build
+        run: |
+          ccache -z
+          cmake --build build --target install --parallel $(nproc)
+          ccache -s
+      - name: Setup ssh
+        uses: mxschmitt/action-tmate@v3.19
       - name: Configure Kokkos
         run: |
           cmake -B builddir \
@@ -85,7 +109,7 @@ jobs:
       - name: Build
         run: |
           ccache -z
-          cmake --build builddir --target Kokkos_SimdHostPerformanceTest --parallel 2
+          cmake --build builddir --target Kokkos_SimdHostPerformanceTest --parallel $(nproc)
           ccache -s
       - name: Tests
         working-directory: builddir/simd/performance_tests
